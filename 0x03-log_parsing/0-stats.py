@@ -1,55 +1,57 @@
 #!/usr/bin/python3
-"""parse that log"""
+"""log that"""
+
 import sys
 import signal
 
-# Initialize variables to store statistics
+# Initialize variables
 total_file_size = 0
-status_codes = {200: 0, 301: 0, 400: 0, 401: 0, 403: 0, 404: 0, 405: 0, 500: 0}
-line_count = 0
+status_codes_count = {}
 
 
-def print_statistics():
-    """Define a function to print statistics"""
-    print(f"File size: {total_file_size}")
-    for code, count in sorted(status_codes.items()):
-        if count > 0:
-            print(f"{code}: {count}")
-    print()
-
-
-def signal_handler(signal, frame):
-    """Define a signal handler to catch KeyboardInterrupt (CTRL + C)"""
-    print_statistics()
+def signal_handler(sig, frame):
+    """Handle keyboard interruption"""
+    print_stats()
     sys.exit(0)
 
 
-# Set the signal handler for KeyboardInterrupt
+def print_stats():
+    """Print the current statistics"""
+    print("File size:", total_file_size)
+    for status_code in sorted(status_codes_count):
+        print(f"{status_code}: {status_codes_count[status_code]}")
+    print()
+
+
+# Register the signal handler
 signal.signal(signal.SIGINT, signal_handler)
 
-# Process input from stdin line by line
-for line in sys.stdin:
-    line = line.strip()
-    parts = line.split()
+try:
+    # Read input line by line
+    for line_count, line in enumerate(sys.stdin, start=1):
+        parts = line.split()
 
-    # Check if the line has the correct format
-    if len(parts) != 10:
-        continue
+        # Check if the line format matches
+        if len(parts) != 9 or parts[5][0] != '"' or not parts[8].isdigit():
+            continue
 
-    ip, _, _, _, _, status_code, file_size = parts
-    try:
-        status_code = int(status_code)
-        file_size = int(file_size)
-    except ValueError:
-        continue
+        status_code = parts[7]
+        file_size = int(parts[8])
 
-    # Update statistics
-    total_file_size += file_size
-    if status_code in status_codes:
-        status_codes[status_code] += 1
+        # Update total file size
+        total_file_size += file_size
 
-    line_count += 1
+        # Update status codes count
+        if status_code.isdigit():
+            status_codes_count[status_code] = (status_codes_count
+                                               .get(status_code, 0) + 1)
 
-    # Print statistics after every 10 lines
-    if line_count % 10 == 0:
-        print_statistics()
+        # Print stats after every 10 lines
+        if line_count % 10 == 0:
+            print_stats()
+
+except KeyboardInterrupt:
+    pass
+
+# Print final stats
+print_stats()
