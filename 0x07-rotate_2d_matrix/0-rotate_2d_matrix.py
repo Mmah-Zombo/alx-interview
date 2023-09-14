@@ -5,12 +5,12 @@
 def rotate_2d_matrix(matrix) -> None:
     """a function that rotates a 2D matrix"""
 
-    if type(matrix) is not list:
+    if type(matrix) != list:
         return
     if len(matrix) < 1:
         return
     for row in matrix:
-        if type(row) is not list:
+        if type(row) != list:
             return
         if len(row) < 1:
             return
