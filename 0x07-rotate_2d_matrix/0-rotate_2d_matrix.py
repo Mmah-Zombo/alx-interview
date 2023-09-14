@@ -12,14 +12,21 @@ def rotate_2d_matrix(matrix) -> None:
     for row in matrix:
         if type(row) != list:
             return
-        if len(row) < 1:
+
+    first_list_length = len(matrix[0])
+
+    # Check the lengths of the remaining lists
+    for sublist in matrix:
+        if len(sublist) != first_list_length:
             return
 
-    matrix.reverse()
-    row1 = [each for row in matrix for each in row if row.index(each) == 0]
-    row2 = [each for row in matrix for each in row if row.index(each) == 1]
-    row3 = [each for row in matrix for each in row if row.index(each) == 2]
-    matrix.clear()
-    matrix.append(row1)
-    matrix.append(row2)
-    matrix.append(row3)
+    n = len(matrix)
+
+    # Transpose the matrix
+    for i in range(n):
+        for j in range(i, n):
+            matrix[i][j], matrix[j][i] = matrix[j][i], matrix[i][j]
+
+    # Reverse each row
+    for i in range(n):
+        matrix[i].reverse()
