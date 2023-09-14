@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3
 """This module contains a fucntion that rotatesa 2D matrix by 90 degrees"""
 from typing import List
 
