@@ -1,9 +1,8 @@
 #!/usr/bin/python3
 """This module contains a fucntion that rotatesa 2D matrix by 90 degrees"""
-from typing import List
 
 
-def rotate_2d_matrix(matrix: List[List]) -> None:
+def rotate_2d_matrix(matrix) -> None:
     """a function that rotates a 2D matrix"""
 
     matrix.reverse()
