@@ -5,6 +5,16 @@
 def rotate_2d_matrix(matrix) -> None:
     """a function that rotates a 2D matrix"""
 
+    if type(matrix) is not list:
+        return
+    if len(matrix) < 1:
+        return
+    for row in matrix:
+        if type(row) is not list:
+            return
+        if len(row) < 1:
+            return
+
     matrix.reverse()
     row1 = [each for row in matrix for each in row if row.index(each) == 0]
     row2 = [each for row in matrix for each in row if row.index(each) == 1]
